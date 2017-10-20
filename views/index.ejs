@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous">
+    </script>
+    <title>Aircraft Viewer</title>
+
+    <link rel="stylesheet" href="/stylesheets/style.css">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+<script>
+    let rawAcList = <%-JSON.stringify(result)%>; // This needs to be in the front end so it can use ejs. I think.
+</script>
+
+<div id="map"></div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcHbfqKsg_7oSYWiX8xaFNfu-Nw35axU8"></script>
+<script src="/javascripts/maps.js"></script>
+<script src="/javascripts/textFilter.js"></script>
+
+<div class="container-fluid">
+    <!-- Here, we create arrays of each parameter dict, so that they can be sorted by value. We then use these indices to order the checkboxes. -->
+    <form>
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Manufacturer: <input class="form-control" type="text" id="manBox" value=""></h3>
+                <%let mans = Object.keys(manufacturers).sort()%>
+                <%let manVals =  Object.keys(manufacturers).map((k) => [k, parseInt(manufacturers[k])]).sort(function(a,b){return b[1]-a[1]})%>
+                <% for(var i = 0; i < mans.length; i++){ %>
+                <div class="form-check">
+                    <% man = manVals[i][0] %>
+                    <label class="form-check-label">
+                        <input class="form-check-input manInput" onclick="filterMap()" type="checkbox" name="Manufacturer" value="<%= man %>">
+                        <%= man %> (<%= manufacturers[man] %>)
+                    </label>
+                </div>
+                <% } %>
+            </div>
+
+            <div class="col-md-4">
+                <h3>Country of Ownership: <input class="form-control" type="text" id="couBox" value=""></h3>
+                <%let cous = Object.keys(countries).sort()%>
+                <%let couVals =  Object.keys(countries).map((k) => [k, parseInt(countries[k])]).sort(function(a,b){return b[1]-a[1]})%>
+                <% for(var i = 0; i < cous.length; i++){ %>
+                <div class="form-check">
+                    <% cou = couVals[i][0] %>
+                    <label class="form-check-label">
+                        <input class="form-check-input couInput" onclick="filterMap()" type="checkbox" name="Country" value="<%= cou %>">
+                        <%= cou %> (<%= countries[cou] %>)
+                    </label>
+                </div>
+                <% } %>
+            </div>
+
+            <div class="col-md-4">
+                <div id="OperatorDiv">
+                    <h3>Aircraft Operator: <input class="form-control" type="text" id="opBox" value=""></h3>
+                    <%let ops = Object.keys(operators).sort()%>
+                    <%let opVals =  Object.keys(operators).map((k) => [k, parseInt(operators[k])]).sort(function(a,b){return b[1]-a[1]})%>
+                    <% for(var i = 0; i < ops.length; i++){ %>
+                    <div class="form-check">
+                        <% op = opVals[i][0] %>
+                        <label class="form-check-label">
+                            <input class="form-check-input opInput" onclick="filterMap()" type="checkbox"  id="<%operators[opVals]%>" name="Operator" value="<%= op %>">
+                            <%= op %> (<%= operators[op] %>)
+                        </label>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+
+</html>
